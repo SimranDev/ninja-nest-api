@@ -14,19 +14,27 @@ datasource db {
 }
 
 model User {
-  id Int @id @default(autoincrement())
-  username String @unique
-  displayName String? @default("Anonymous")
+  id    Int    @id @default(autoincrement())
+  name  String
+  email String @unique
+  polls Poll[]
+  votes Vote[]
 }
 
-model UserSetting {
-  id Int @id @default(autoincrement())
-  notificationsOn Boolean @default(false)
-  smsEnabled Boolean @default(false)
+model Poll {
+  id      Int      @id @default(autoincrement())
+  title   String
+  options String[]
+  votes   Vote[]
+  userId  Int
+  user    User     @relation(fields: [userId], references: [id])
 }
 
-model Post {
-  id Int @id @default(autoincrement())
-  title String
-  description String
+model Vote {
+  id     Int    @id @default(autoincrement())
+  option String
+  pollId Int
+  poll   Poll   @relation(fields: [pollId], references: [id])
+  userId Int
+  user   User   @relation(fields: [userId], references: [id])
 }
